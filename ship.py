@@ -15,6 +15,8 @@ class Ship(Sprite):
         self.delay = 0
         # Load the ship image and get its rect.
         self.image = pygame.image.load('images/Ship2.bmp')
+
+        # Death images
         self.death_img = {0: 'images/explosion1.bmp',
                           1: 'images/explosion2.bmp',
                           2: 'images/explosion3.bmp',
@@ -48,6 +50,7 @@ class Ship(Sprite):
         # Update rect obj from self.center
         self.rect.centerx = self.center
 
+        # Switches out the images to animate ship's explosion
         if self.delay == 15 and self.index < 8 and self.stats.ship_hit:
             self.image = pygame.image.load(self.death_img[self.index])
             self.index += 1

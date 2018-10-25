@@ -8,7 +8,9 @@ class GameStats:
         self.score_screen_active = False
         # Start game in an inactive state
         self.game_active = False
+        # Flag for if ship is hit
         self.ship_hit = False
+        # Flag for if aliens have been hit
         self.alien_hit = {0: False,
                           1: False,
                           2: False}

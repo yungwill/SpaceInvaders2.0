@@ -5,7 +5,7 @@ from alien import Alien
 class Button:
 
     def __init__(self, screen, msg, ai_settings, alien_bullets, stats):
-        """Initializes button attributes"""
+        """Initializes button, alien, title attributes"""
         self.screen = screen
         self.ai_settings = ai_settings
         self.alien_bullets = alien_bullets
@@ -13,6 +13,7 @@ class Button:
         self.screen_rect = screen.get_rect()
         self.centerx = self.screen_rect.centerx
 
+        # Sets up all the types of aliens
         self.alien1 = Alien(ai_settings, screen, 0, self.alien_bullets, stats)
         self.alien2 = Alien(ai_settings, screen, 1, self.alien_bullets, stats)
         self.alien3 = Alien(ai_settings, screen, 2, self.alien_bullets, stats)
@@ -22,14 +23,17 @@ class Button:
         self.width, self.height = 200, 50
         self.button_color = (255, 0, 255)
         self.text_color = (255, 255, 255)
-        self.font = pygame.font.SysFont(None, 48)
+
         # Colors
         self.white = (255, 255, 255)
         self.green = (0, 255, 0)
 
+        # Fonts
+        self.font = pygame.font.SysFont(None, 48)
         self.titlefont = pygame.font.SysFont(None, 100)
         self.titlefont2 = pygame.font.SysFont(None, 50)
 
+        # Sets up properties of the title and the worth of alien points
         self.title = self.titlefont.render("   SPACE", False, self.white)
         self.title2 = self.titlefont.render("INVADERS", False, self.green)
 
@@ -56,7 +60,7 @@ class Button:
         self.msg_image_rect.center = self.rect.center
 
     def draw_button(self):
-        # Draw a blank button and then draw the message
+        # Draw a blank button, message, aliens, title, and point worth
         if not self.stats.score_screen_active:
             self.screen.fill(self.button_color, self.rect)
             self.screen.blit(self.msg_image, (self.ai_settings.screen_width / 2.15, 600))

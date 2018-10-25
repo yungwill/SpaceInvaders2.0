@@ -4,10 +4,10 @@ from pygame.sprite import Sprite
 
 
 class AlienBullet(Sprite):
-    """A class to manage bullets fired from the ship"""
+    """A class to manage the alien bullets fired from the aliens"""
 
     def __init__(self, ai_settings, screen, x_pos, y_pos):
-        """Create a bullet obj at the ship's current position"""
+        """Create a bullet obj at the aliens's current position"""
         super().__init__()
         self.screen = screen
         self.x_pos, self.y_pos = x_pos, y_pos
@@ -26,12 +26,12 @@ class AlienBullet(Sprite):
         self.laser_sound.play()
 
     def update(self):
-        """Move the bullet up the screen"""
+        """Move the bullet down the screen"""
         # Update the decimal position of the bullet
         self.y += self.speed_factor
         # Update the rect position
         self.rect.y = self.y
 
     def draw_bullet(self):
-        """Draw the bullet to the screen and makes shooting sound"""
+        """Draw the bullet to the screen"""
         pygame.draw.rect(self.screen, self.color, self.rect)

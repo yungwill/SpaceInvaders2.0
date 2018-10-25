@@ -24,6 +24,7 @@ class Settings:
         self.alien_bullets_allowed = 6
         self.bullets_allowed = 10
 
+        # Sounds
         self.music = pygame.mixer.Sound('Sounds/bkgrdmusic.wav')
         self.music1 = pygame.mixer.Sound('Sounds/bkgrdmusic1.25.wav')
         self.music2 = pygame.mixer.Sound('Sounds/bkgrdmusic1.5.wav')

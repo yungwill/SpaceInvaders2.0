@@ -89,6 +89,7 @@ class Scoreboard:
             self.ships.draw(self.screen)
 
     def draw_score_screen(self):
+        """Draws the high scores screen"""
         if self.stats.score_screen_active:
             while self.stats.count <= 9:
                 self.score_image = self.font.render(str(self.stats.count + 1) + ". -----",

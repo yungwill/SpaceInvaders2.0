@@ -56,6 +56,7 @@ def run_game():
         # Delay to prevent too many from spawning at once
         if delay == timer:
             gf.create_ufo(ai_settings, screen, ufo, alien_bullets, stats)
+            # plays ufo sound
             ai_settings.ufo_sound.play()
             delay = 0
             timer = random.randint(700, 1001)

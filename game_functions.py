@@ -94,6 +94,7 @@ def check_play_button(ai_settings, screen, stats, sb, play_button, ship, aliens_
 
 
 def check_score_button(stats, score_button, mouse_x, mouse_y):
+    """Checks if the score button has been pressed and takes user to high score screen"""
     score_clicked = score_button.rect.collidepoint(mouse_x, mouse_y)
     if score_clicked and not stats.game_active:
         stats.score_screen_active = True
@@ -104,13 +105,17 @@ def update_screen(ai_settings, screen, stats, sb, ship, aliens_1, aliens_2, alie
     """Updates images on the screen and flips to new screen"""
     alien = Alien(ai_settings, screen, 3, alien_bullets, stats)
     collisions_ufo = pygame.sprite.groupcollide(bullets, ufo, True, True)
+
     # Redraws the screen during each pass through the loop
     screen.fill(ai_settings.bg_color)
+
     # Redraw all bullets behind ship and aliens
     for bullet in bullets.sprites():
         bullet.draw_bullet()
     for alien_bullet in alien_bullets.sprites():
         alien_bullet.draw_bullet()
+
+    # Draws ship, bunkers, aliens, and scores
     ship.blitme()
     bunkers.draw(screen)
     aliens_1.draw(screen)
@@ -120,6 +125,7 @@ def update_screen(ai_settings, screen, stats, sb, ship, aliens_1, aliens_2, alie
     # Draw the score info
     sb.show_score()
 
+    # Checks if ufo had been hit and shows the points it is worth if it is
     if collisions_ufo:
         ai_settings.ufo_sound.stop()
         ai_settings.death_sound.play()
@@ -143,11 +149,13 @@ def update_screen(ai_settings, screen, stats, sb, ship, aliens_1, aliens_2, alie
     if not stats.game_active and not stats.score_screen_active:
         play_button.draw_button()
         score_button.draw_button()
-    # Makes the most recently drawn screen visible
 
+    # Draws the high score screen
     if not stats.game_active and stats.score_screen_active:
         sb.draw_score_screen()
         back_button.draw_back()
+
+    # Makes the most recently drawn screen visible
     pygame.display.flip()
 
 
@@ -182,14 +190,15 @@ def check_bullet_alien_collisions(ai_settings, screen, stats, sb, ship, aliens_1
     collisions_enemy = pygame.sprite.spritecollide(ship, alien_bullets, True)
     collisions_ufo = pygame.sprite.groupcollide(bullets, ufo, True, True)
 
-    # Sets invader death sound to death_sound
     if collisions_1:
         # Plays the death sound
         ai_settings.death_sound.play()
         for aliens in collisions_1.values():
             for alien in aliens:
+                # displays explosion of alien
                 update_alien_death(ai_settings, screen, stats, sb, ship, aliens_1, aliens_2, aliens_3,
                                    ufo, bullets, alien_bullets, bunkers, 0, alien.rect.x, alien.rect.y)
+            # Updates the score
             stats.score += ai_settings.alien1_points * len(aliens)
             sb.prep_score()
         check_high_score(stats, sb)
@@ -215,18 +224,20 @@ def check_bullet_alien_collisions(ai_settings, screen, stats, sb, ship, aliens_1
             stats.score += ai_settings.alien3_points * len(aliens)
             sb.prep_score()
         check_high_score(stats, sb)
+
     # Checks if bullet hit ufo
     if collisions_ufo:
         # Plays the death sound
         ai_settings.ufo_sound.stop()
         ai_settings.death_sound.play()
         for aliens in collisions_ufo.values():
+            # Updates the scores
             stats.score += ai_settings.alien4_points * len(aliens)
             sb.prep_score()
         check_high_score(stats, sb)
 
+    # Checks if the entire fleet is destroyed, start a new level
     if len(aliens_1) == 0 and len(aliens_2) == 0 and len(aliens_3) == 0:
-        # if the entire fleet is destroyed, start a new level
         bullets.empty()
         alien_bullets.empty()
         ai_settings.increase_speed()
@@ -242,6 +253,7 @@ def check_bullet_alien_collisions(ai_settings, screen, stats, sb, ship, aliens_1
         create_fleet2(ai_settings, screen, ship, aliens_1, aliens_2, aliens_3, alien_bullets, stats)
         create_fleet3(ai_settings, screen, ship, aliens_1, aliens_2, aliens_3, alien_bullets, stats)
 
+    # Checks if alien lasers have hit the ship and starts over if true
     if collisions_enemy:
         ship_hit(ai_settings, screen, stats, sb, ship, aliens_1, aliens_2, aliens_3,
                  ufo, bullets, alien_bullets, bunkers)
@@ -269,6 +281,7 @@ def create_alien(ai_settings, screen, aliens_1, aliens_2, aliens_3, alien_number
     alien_width = alien.rect.width
     alien.x = alien_width + 1.2 * alien_width * alien_number
     alien.rect.x = alien.x
+    # Checks the type of alien and adds that type to its fleet
     if indx == 0:
         alien.rect.y = alien.rect.height + 1.2 * alien.rect.height * (3 + row_number)
         aliens_1.add(alien)
@@ -281,7 +294,7 @@ def create_alien(ai_settings, screen, aliens_1, aliens_2, aliens_3, alien_number
 
 
 def create_fleet(ai_settings, screen, ship, aliens_1, aliens_2, aliens_3, alien_bullets, stats):
-    """Create a full fleet of aliens"""
+    """Create a full fleet of aliens of a single type"""
     # Create an alien and find the number of the aliens in a row
     index = 0
     alien = Alien(ai_settings, screen, index, alien_bullets, stats)
@@ -296,7 +309,7 @@ def create_fleet(ai_settings, screen, ship, aliens_1, aliens_2, aliens_3, alien_
 
 
 def create_fleet2(ai_settings, screen, ship, aliens_1, aliens_2, aliens_3, alien_bullets, stats):
-    """Create a full fleet of aliens"""
+    """Create a full fleet of aliens of a single type"""
     # Create an alien and find the number of the aliens in a row
     index = 1
     alien = Alien(ai_settings, screen, index, alien_bullets, stats)
@@ -311,7 +324,7 @@ def create_fleet2(ai_settings, screen, ship, aliens_1, aliens_2, aliens_3, alien
 
 
 def create_fleet3(ai_settings, screen, ship, aliens_1, aliens_2, aliens_3, alien_bullets, stats):
-    """Create a full fleet of aliens"""
+    """Create a full fleet of aliens of a single type"""
     # Create an alien and find the number of the aliens in a row
     index = 2
     alien = Alien(ai_settings, screen, index, alien_bullets, stats)
@@ -371,10 +384,11 @@ def ship_hit(ai_settings, screen, stats, sb, ship, aliens_1, aliens_2, aliens_3,
     ai_settings.music2.stop()
     ship_death = pygame.mixer.Sound('Sounds/explosion.wav')
     ship_death.play()
+
+    # displays ship death animation
     update_death_animation(screen, ai_settings, bullets, alien_bullets, ship, bunkers, aliens_1, aliens_2,
                            aliens_3, ufo, sb, stats)
     if stats.ships_left > 0:
-        # Plays explosion when ship dies
         # Decrement ships_left
         stats.ships_left -= 1
 
@@ -403,6 +417,7 @@ def ship_hit(ai_settings, screen, stats, sb, ship, aliens_1, aliens_2, aliens_3,
         sleep(0.4)
         ai_settings.music.play(-1)
     else:
+        # Ends the game completely when out of lives
         aliens_1.empty()
         aliens_2.empty()
         aliens_3.empty()
@@ -544,6 +559,7 @@ def create_bunker_set(ai_settings, screen, bunkers):
 
 def update_death_animation(screen, ai_settings, bullets, alien_bullets, ship, bunkers, aliens_1, aliens_2,
                            aliens_3, ufo, sb, stats):
+    """Allows the ship to animate its death explosion when a cycle has not completed to update the screen"""
     stats.ship_hit = True
     while stats.ship_hit:
         ship.update()
@@ -568,7 +584,7 @@ def update_death_animation(screen, ai_settings, bullets, alien_bullets, ship, bu
 
 def update_alien_death(ai_settings, screen, stats, sb, ship, aliens_1, aliens_2, aliens_3,
                        ufo, bullets, alien_bullets, bunkers, index, x, y):
-    """Updates images on the screen and flips to new screen"""
+    """Allows the aliens to animate its death explosion when a cycle has not completed to update the screen"""
     alien = Alien(ai_settings, screen, 3, alien_bullets, stats)
     explosion = AlienExplosion(ai_settings, screen, index, stats, x, y)
     stats.alien_hit[index] = True

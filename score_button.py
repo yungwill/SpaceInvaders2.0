@@ -4,7 +4,7 @@ import pygame.ftfont
 class ScoreButton:
 
     def __init__(self, screen, highscr, ai_settings):
-        """Initializes button attributes"""
+        """Initializes the high scores button attributes"""
         self.screen = screen
         self.ai_settings = ai_settings
         self.screen_rect = screen.get_rect()
@@ -39,6 +39,6 @@ class ScoreButton:
         self.screen.blit(self.highscr_image, (self.ai_settings.screen_width / 2.5, 700))
 
     def draw_back(self):
-        # Draw a blank button and then draw the message
+        # Draw a blank button and then draw the message to go back to main menu
         self.screen.fill(self.button_color, self.rect)
         self.screen.blit(self.highscr_image, (self.ai_settings.screen_width / 2.3, 700))

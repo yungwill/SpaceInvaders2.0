@@ -4,7 +4,7 @@ from pygame.sprite import Sprite
 
 
 class AlienExplosion(Sprite):
-
+    """A class to animate the explosion of an alien when it dies"""
     def __init__(self, ai_settings, screen, index, stats, xpos, ypos):
         super().__init__()
         self.screen = screen
@@ -15,6 +15,7 @@ class AlienExplosion(Sprite):
         self.ypos = ypos
         self.screen_rect = screen.get_rect()
 
+        # All the images needed for the animation of each type of alien
         self.alien1_death_img = {0: 'images/alien1_explosion1.bmp',
                                  1: 'images/alien1_explosion2.bmp',
                                  2: 'images/alien1_explosion3.bmp'}
@@ -27,6 +28,7 @@ class AlienExplosion(Sprite):
                                  1: 'images/alien3_explosion2.bmp',
                                  2: 'images/alien3_explosion3.bmp'}
 
+        # A count so that the animation loops all the way through
         self.index2 = 0
         self.index3 = 0
         self.index4 = 0
@@ -34,8 +36,11 @@ class AlienExplosion(Sprite):
         self.image = None
 
     def update(self):
-        """Move the alien right and animates every 50 loops"""
+        """Updates the image needed to be shown"""
 
+        # Checks if the index is inside the range for the images, checks which alien type it is
+        # Checks if that alien has been hit and if all are true then the image changes to the next one
+        # Ends when the index hits 3
         if self.index2 < 3 and self.index == 0 and self.stats.alien_hit[0]:
             self.image = pygame.image.load(self.alien1_death_img[self.index2])
             self.index2 += 1
